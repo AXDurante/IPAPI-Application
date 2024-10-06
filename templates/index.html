@@ -8,10 +8,71 @@
       rel="stylesheet"
     />
     <title>Public IP Information</title>
+    <style>
+      body {
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        min-height: 100vh;
+        font-family: 'Arial', sans-serif;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        padding: 30px;
+        margin-top: 50px;
+      }
+      h1 {
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      }
+      .btn-primary {
+        background: linear-gradient(45deg, #11998e, #38ef7d);
+        border: none;
+        border-radius: 30px;
+        padding: 10px 30px;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px 0 rgba(49, 196, 190, 0.75);
+      }
+      #geo-info {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 20px;
+        color: white;
+        animation: fadeIn 0.5s ease-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      #map {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      .geo-item {
+        margin-bottom: 10px;
+        padding: 5px 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+      .geo-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(5px);
+      }
+    </style>
     <script>
       let userLatitude, userLongitude;
 
-      // Function to fetch geolocation based on user's IP
       function fetchGeolocation() {
         fetch("https://ipapi.co/json/")
           .then((response) => response.json())
@@ -19,31 +80,26 @@
             userLatitude = data.latitude;
             userLongitude = data.longitude;
 
-            // Display the geolocation data
             document.getElementById("geo-info").innerHTML = `
+                <h3 class="mb-4">Your Geolocation:</h3>
                 <div class="row">
-                    <div class="col-6">
-                        <h3>Your Geolocation:</h3>
-                        <p>IP Address: ${data.ip}</p>
-                        <p>IP Version: ${data.version}</p>
-                        <p>City: ${data.city}</p>
-                        <p>Region: ${data.region}</p>
-                        <p>Country: ${data.country_name}</p>
-                        <p>Country Code: ${data.country_code}</p>
-                        <p>Latitude: ${data.latitude}</p>
-                       
-                 
+                    <div class="col-md-6">
+                        <div class="geo-item">IP Address: ${data.ip}</div>
+                        <div class="geo-item">IP Version: ${data.version}</div>
+                        <div class="geo-item">City: ${data.city}</div>
+                        <div class="geo-item">Region: ${data.region}</div>
+                        <div class="geo-item">Country: ${data.country_name}</div>
                     </div>
-                    <div class="col-6">
-                        <br>  <br>
-                         <p>Longitude: ${data.longitude}</p>
-                            <p>ASN: ${data.asn}</p>
-                        <p>Organization:${data.org}</p>
+                    <div class="col-md-6">
+                        <div class="geo-item">Country Code: ${data.country_code}</div>
+                        <div class="geo-item">Latitude: ${data.latitude}</div>
+                        <div class="geo-item">Longitude: ${data.longitude}</div>
+                        <div class="geo-item">ASN: ${data.asn}</div>
+                        <div class="geo-item">Organization: ${data.org}</div>
                     </div>
                 </div>
             `;
 
-            // Initialize the map
             initMap(userLatitude, userLongitude);
           })
           .catch((error) => {
@@ -51,12 +107,100 @@
           });
       }
 
-      // Function to initialize Google Maps
       function initMap(lat, lng) {
         const location = { lat: lat, lng: lng };
         const map = new google.maps.Map(document.getElementById("map"), {
           zoom: 10,
           center: location,
+          styles: [
+            {
+              "elementType": "geometry",
+              "stylers": [{"color": "#242f3e"}]
+            },
+            {
+              "elementType": "labels.text.stroke",
+              "stylers": [{"color": "#242f3e"}]
+            },
+            {
+              "elementType": "labels.text.fill",
+              "stylers": [{"color": "#746855"}]
+            },
+            {
+              "featureType": "administrative.locality",
+              "elementType": "labels.text.fill",
+              "stylers": [{"color": "#d59563"}]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "labels.text.fill",
+              "stylers": [{"color": "#d59563"}]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "geometry",
+              "stylers": [{"color": "#263c3f"}]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "labels.text.fill",
+              "stylers": [{"color": "#6b9a76"}]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry",
+              "stylers": [{"color": "#38414e"}]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry.stroke",
+              "stylers": [{"color": "#212a37"}]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels.text.fill",
+              "stylers": [{"color": "#9ca5b3"}]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry",
+              "stylers": [{"color": "#746855"}]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry.stroke",
+              "stylers": [{"color": "#1f2835"}]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "labels.text.fill",
+              "stylers": [{"color": "#f3d19c"}]
+            },
+            {
+              "featureType": "transit",
+              "elementType": "geometry",
+              "stylers": [{"color": "#2f3948"}]
+            },
+            {
+              "featureType": "transit.station",
+              "elementType": "labels.text.fill",
+              "stylers": [{"color": "#d59563"}]
+            },
+            {
+              "featureType": "water",
+              "elementType": "geometry",
+              "stylers": [{"color": "#17263c"}]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.fill",
+              "stylers": [{"color": "#515c6d"}]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.stroke",
+              "stylers": [{"color": "#17263c"}]
+            }
+          ]
         });
         const marker = new google.maps.Marker({
           position: location,
@@ -64,7 +208,6 @@
         });
       }
 
-      // Display initial message
       window.onload = function () {
         document.getElementById("geo-info").innerHTML = `
           <h3>Press the button to see your IP location info.</h3>
@@ -78,33 +221,20 @@
     ></script>
   </head>
   <body>
-    <div class="container p-5">
+    <div class="container">
       <h1 class="text-center my-4">Public IP Information</h1>
 
-      <!-- Button to Get IP Information -->
-      <form
-        action="/get_ip_info"
-        method="POST"
-        onsubmit="fetchGeolocation(); return false;"
-      >
-        <button type="submit" class="btn btn-primary my-4">
+      <div class="text-center">
+        <button onclick="fetchGeolocation()" class="btn btn-primary my-4">
           Get IP Information
         </button>
-      </form>
+      </div>
 
-      <!-- Geolocation Information -->
-
-      <!-- Google Map -->
       <div class="row">
-        <div class="col-8">
-          <!-- Error Handling -->
-          {% if error %}
-          <div class="alert alert-danger">{{ error }}</div>
-          {% endif %} {% if ip_info %}
-          <div id="geo-info" class="alert alert-info"></div>
-          {% endif %}
+        <div class="col-md-8">
+          <div id="geo-info"></div>
         </div>
-        <div class="col-4">
+        <div class="col-md-4">
           <div id="map" style="height: 400px; width: 100%"></div>
         </div>
       </div>
