@@ -3,6 +3,7 @@ import requests
 
 app = Flask(__name__)
 
+# Added comment for test
 # Define the API endpoint for fetching the public IP info
 IP_API_URL = "https://ipapi.co/json/"
 
