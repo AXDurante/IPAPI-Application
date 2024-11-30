@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Verify current directory
+        run: pwd
       # Step 1: Check out the repository code
       - name: Check out code
         uses: actions/checkout@v3
