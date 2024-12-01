@@ -1,27 +1,71 @@
 import pytest
-from app import app  # Make sure you import the app correctly
+from flask import template_rendered
+from app import app  # Import your Flask app
+from unittest.mock import patch, Mock
+
 
 @pytest.fixture
 def client():
+    # Create a test client for the Flask app
     with app.test_client() as client:
         yield client
 
-def test_home(client):
-    """Test the home route"""
-    response = client.get('/')
-    
-    # Ensure the status code is 302 (Redirect)
-    assert response.status_code == 302
-    
-    # Check if the redirect URL is correct (to /get_ip_info)
-    assert response.location == 'http://localhost/get_ip_info'
 
-def test_get_ip_info(client):
-    """Test the /get_ip_info route"""
-    response = client.get('/get_ip_info')
+@pytest.fixture
+def captured_templates():
+    # Capture rendered templates for assertions
+    recorded = []
 
-    # Ensure the status code is 200 OK
-    assert response.status_code == 200
+    def record(sender, template, context, **extra):
+        recorded.append((template, context))
 
-    # Check if the response contains IP information (or an error message)
-    assert b"ip" in response.data or b"Could not retrieve IP information." in response.data
+    template_rendered.connect(record, app)
+    yield recorded
+    template_rendered.disconnect(record, app)
+
+
+def test_get_ip_info_success(client, captured_templates):
+    # Mock the `requests.get` call to return sample IP data
+    sample_ip_data = {
+        'ip': '203.0.113.195',
+        'version': 'IPv4',
+        'city': 'Sample City',
+        'region': 'Sample Region',
+        'country_name': 'Sample Country',
+        'country_code': 'SC',
+        'latitude': 45.0,
+        'longitude': -93.0,
+        'asn': 'AS12345',
+        'org': 'Sample Organization',
+    }
+    with patch('app.requests.get') as mock_get:
+        mock_response = Mock()
+        mock_response.json.return_value = sample_ip_data
+        mock_response.raise_for_status = Mock()  # Simulate no HTTP errors
+        mock_get.return_value = mock_response
+
+        response = client.get('/get_ip_info')
+        assert response.status_code == 200
+
+        # Check rendered template
+        assert len(captured_templates) == 1
+        template, context = captured_templates[0]
+        assert template.name == 'index.html'
+        assert 'ip_info' in context
+        assert context['ip_info']['ip'] == '203.0.113.195'
+
+
+def test_get_ip_info_error(client, captured_templates):
+    # Mock the `requests.get` call to raise an exception
+    with patch('app.requests.get') as mock_get:
+        mock_get.side_effect = Exception('API error')
+
+        response = client.get('/get_ip_info')
+        assert response.status_code == 200
+
+        # Check rendered template for error message
+        assert len(captured_templates) == 1
+        template, context = captured_templates[0]
+        assert template.name == 'index.html'
+        assert 'error' in context
+        assert 'Error retrieving IP information' in context['error']
