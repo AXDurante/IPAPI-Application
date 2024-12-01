@@ -3,7 +3,6 @@ import requests
 
 app = Flask(__name__)
 
-# Added comment for test
 # Define the API endpoint for fetching the public IP info
 IP_API_URL = "https://ipapi.co/json/"
 
@@ -16,25 +15,29 @@ def home():
 def get_ip_info():
     # If the method is GET, fetch the IP info
     if request.method == 'GET':
-        response = requests.get(IP_API_URL).json()
+        try:
+            response = requests.get(IP_API_URL)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            ip_data = response.json()  # Get JSON data from response
 
-        # Check if the response contains required data
-        if response:
+            # Check if the response contains required data
             ip_info = {
-                'ip': response.get('ip'),
-                'version': response.get('version'),
-                'city': response.get('city'),
-                'region': response.get('region'),
-                'country': response.get('country_name'),
-                'country_code': response.get('country_code'),
-                'latitude': response.get('latitude'),
-                'longitude': response.get('longitude'),
-                'asn': response.get('asn'),
-                'org': response.get('org'),
+                'ip': ip_data.get('ip'),
+                'version': ip_data.get('version'),
+                'city': ip_data.get('city'),
+                'region': ip_data.get('region'),
+                'country': ip_data.get('country_name'),
+                'country_code': ip_data.get('country_code'),
+                'latitude': ip_data.get('latitude'),
+                'longitude': ip_data.get('longitude'),
+                'asn': ip_data.get('asn'),
+                'org': ip_data.get('org'),
             }
+
             return render_template('index.html', ip_info=ip_info)
-        else:
-            error_message = "Could not retrieve IP information."
+
+        except requests.exceptions.RequestException as e:
+            error_message = f"Error retrieving IP information: {e}"
             return render_template('index.html', error=error_message)
 
 if __name__ == '__main__':
