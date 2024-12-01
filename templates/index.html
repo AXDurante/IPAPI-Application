@@ -87,9 +87,120 @@
         margin-bottom: 15px;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
       }
+      .language-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .language-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
     </style>
     <script>
       let userLatitude, userLongitude;
+
+      // Language translations
+      const translations = {
+        en: {
+          title: "Public IP Information",
+          button: "Get IP Information",
+          initialMessage: "Press the button to see your IP location info.",
+          switchLang: "Switch to Filipino",
+          geoInfo: "Your Geolocation Information:",
+          locationDetails: "Location Details",
+          geographicCoordinates: "Geographic Coordinates",
+          networkInformation: "Network Information",
+          additionalDetails: "Additional Details",
+          // Field translations
+          ipAddress: "IP Address",
+          ipVersion: "IP Version",
+          city: "City",
+          region: "Region",
+          regionCode: "Region Code",
+          country: "Country",
+          countryCode: "Country Code",
+          countryCapital: "Country Capital",
+          continentCode: "Continent Code",
+          latitude: "Latitude",
+          longitude: "Longitude",
+          timezone: "Timezone",
+          utcOffset: "UTC Offset",
+          asn: "ASN",
+          organization: "Organization",
+          isp: "ISP",
+          countryPopulation: "Country Population",
+          countryArea: "Country Area",
+          countryTld: "Country TLD",
+          callingCode: "Calling Code"
+        },
+        fil: {
+          title: "Impormasyon ng Pampublikong IP",
+          button: "Kunin ang Impormasyon ng IP",
+          initialMessage: "Pindutin ang button para makita ang impormasyon ng iyong lokasyon ng IP.",
+          switchLang: "Switch to English",
+          geoInfo: "Ang Iyong Impormasyon sa Geolocation:",
+          locationDetails: "Mga Detalye ng Lokasyon",
+          geographicCoordinates: "Mga Koordinatang Heograpiko",
+          networkInformation: "Impormasyon ng Network",
+          additionalDetails: "Karagdagang Detalye",
+          // Field translations
+          ipAddress: "IP Address",
+          ipVersion: "Bersyon ng IP",
+          city: "Lungsod",
+          region: "Rehiyon",
+          regionCode: "Code ng Rehiyon",
+          country: "Bansa",
+          countryCode: "Code ng Bansa",
+          countryCapital: "Kabisera ng Bansa",
+          continentCode: "Code ng Kontinente",
+          latitude: "Latitud",
+          longitude: "Longhitud",
+          timezone: "Time Zone",
+          utcOffset: "UTC Offset",
+          asn: "ASN",
+          organization: "Organisasyon",
+          isp: "ISP",
+          countryPopulation: "Populasyon ng Bansa",
+          countryArea: "Sukat ng Bansa",
+          countryTld: "TLD ng Bansa",
+          callingCode: "Code ng Pagtawag"
+        }
+      };
+
+      let currentLang = 'en';
+
+      function toggleLanguage() {
+        currentLang = currentLang === 'en' ? 'fil' : 'en';
+        updatePageLanguage();
+      }
+
+      function updatePageLanguage() {
+        // Update button text
+        document.getElementById('langToggle').textContent = translations[currentLang].switchLang;
+        
+        // Update title
+        document.querySelector('h1').textContent = translations[currentLang].title;
+        
+        // Update main button
+        document.querySelector('.btn-primary').textContent = translations[currentLang].button;
+
+        // Update initial message if it's showing
+        const geoInfo = document.getElementById('geo-info');
+        if (geoInfo.querySelector('h3')?.textContent.includes('Press the button')) {
+          geoInfo.innerHTML = `<h3>${translations[currentLang].initialMessage}</h3>`;
+        }
+
+        // If data is already displayed, update it
+        if (geoInfo.querySelector('.row')) {
+          fetchGeolocation(); // Refetch and display in new language
+        }
+      }
 
       function fetchGeolocation() {
         fetch("https://ipapi.co/json/")
@@ -99,46 +210,46 @@
             userLongitude = data.longitude;
 
             document.getElementById("geo-info").innerHTML = `
-              <h3 class="mb-4">Your Geolocation Information:</h3>
+              <h3 class="mb-4">${translations[currentLang].geoInfo}</h3>
               <div class="row">
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
-                    <h4 class="section-title">Location Details</h4>
-                    <div class="geo-item">IP Address: ${data.ip}</div>
-                    <div class="geo-item">IP Version: ${data.version}</div>
-                    <div class="geo-item">City: ${data.city}</div>
-                    <div class="geo-item">Region: ${data.region}</div>
-                    <div class="geo-item">Region Code: ${data.region_code}</div>
-                    <div class="geo-item">Country: ${data.country_name}</div>
-                    <div class="geo-item">Country Code: ${data.country_code}</div>
-                    <div class="geo-item">Country Capital: ${data.country_capital}</div>
-                    <div class="geo-item">Continent Code: ${data.continent_code}</div>
+                    <h4 class="section-title">${translations[currentLang].locationDetails}</h4>
+                    <div class="geo-item">${translations[currentLang].ipAddress}: ${data.ip}</div>
+                    <div class="geo-item">${translations[currentLang].ipVersion}: ${data.version}</div>
+                    <div class="geo-item">${translations[currentLang].city}: ${data.city}</div>
+                    <div class="geo-item">${translations[currentLang].region}: ${data.region}</div>
+                    <div class="geo-item">${translations[currentLang].regionCode}: ${data.region_code}</div>
+                    <div class="geo-item">${translations[currentLang].country}: ${data.country_name}</div>
+                    <div class="geo-item">${translations[currentLang].countryCode}: ${data.country_code}</div>
+                    <div class="geo-item">${translations[currentLang].countryCapital}: ${data.country_capital}</div>
+                    <div class="geo-item">${translations[currentLang].continentCode}: ${data.continent_code}</div>
                   </div>
                 </div>
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
-                    <h4 class="section-title">Geographic Coordinates</h4>
-                    <div class="geo-item">Latitude: ${data.latitude}</div>
-                    <div class="geo-item">Longitude: ${data.longitude}</div>
-                    <div class="geo-item">Timezone: ${data.timezone}</div>
-                    <div class="geo-item">UTC Offset: ${data.utc_offset}</div>
+                    <h4 class="section-title">${translations[currentLang].geographicCoordinates}</h4>
+                    <div class="geo-item">${translations[currentLang].latitude}: ${data.latitude}</div>
+                    <div class="geo-item">${translations[currentLang].longitude}: ${data.longitude}</div>
+                    <div class="geo-item">${translations[currentLang].timezone}: ${data.timezone}</div>
+                    <div class="geo-item">${translations[currentLang].utcOffset}: ${data.utc_offset}</div>
                   </div>
                 </div>
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
-                    <h4 class="section-title">Network Information</h4>
-                    <div class="geo-item">ASN: ${data.asn}</div>
-                    <div class="geo-item">Organization: ${data.org}</div>
-                    <div class="geo-item">ISP: ${data.isp}</div>
+                    <h4 class="section-title">${translations[currentLang].networkInformation}</h4>
+                    <div class="geo-item">${translations[currentLang].asn}: ${data.asn}</div>
+                    <div class="geo-item">${translations[currentLang].organization}: ${data.org}</div>
+                    <div class="geo-item">${translations[currentLang].isp}: ${data.isp}</div>
                   </div>
                 </div>
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
-                    <h4 class="section-title">Additional Details</h4>
-                    <div class="geo-item">Country Population: ${data.country_population?.toLocaleString() || 'N/A'}</div>
-                    <div class="geo-item">Country Area: ${data.country_area?.toLocaleString() || 'N/A'} km²</div>
-                    <div class="geo-item">Country TLD: ${data.country_tld}</div>
-                    <div class="geo-item">Calling Code: +${data.country_calling_code}</div>
+                    <h4 class="section-title">${translations[currentLang].additionalDetails}</h4>
+                    <div class="geo-item">${translations[currentLang].countryPopulation}: ${data.country_population?.toLocaleString() || 'N/A'}</div>
+                    <div class="geo-item">${translations[currentLang].countryArea}: ${data.country_area?.toLocaleString() || 'N/A'} km²</div>
+                    <div class="geo-item">${translations[currentLang].countryTld}: ${data.country_tld}</div>
+                    <div class="geo-item">${translations[currentLang].callingCode}: +${data.country_calling_code}</div>
                   </div>
                 </div>
               </div>
@@ -269,8 +380,11 @@
       <h1 class="text-center my-4">Public IP Information</h1>
 
       <div class="text-center">
-        <button onclick="fetchGeolocation()" class="btn btn-primary my-4">
+        <button onclick="fetchGeolocation()" class="btn btn-primary my-4 me-2">
           Get IP Information
+        </button>
+        <button class="btn btn-primary my-4" onclick="toggleLanguage()" id="langToggle">
+          Switch to Filipino
         </button>
       </div>
 
