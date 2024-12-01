@@ -59,15 +59,33 @@
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
       }
       .geo-item {
-        margin-bottom: 10px;
-        padding: 5px 10px;
+        margin-bottom: 8px;
+        padding: 8px 12px;
         background: rgba(255, 255, 255, 0.1);
         border-radius: 8px;
         transition: all 0.3s ease;
+        font-size: 0.95rem;
       }
       .geo-item:hover {
         background: rgba(255, 255, 255, 0.2);
         transform: translateX(5px);
+      }
+      .info-section {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        padding: 20px;
+        height: 100%;
+        transition: all 0.3s ease;
+      }
+      .info-section:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-5px);
+      }
+      .section-title {
+        color: #38ef7d;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
       }
     </style>
     <script>
@@ -81,23 +99,49 @@
             userLongitude = data.longitude;
 
             document.getElementById("geo-info").innerHTML = `
-                <h3 class="mb-4">Your Geolocation:</h3>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="geo-item">IP Address: ${data.ip}</div>
-                        <div class="geo-item">IP Version: ${data.version}</div>
-                        <div class="geo-item">City: ${data.city}</div>
-                        <div class="geo-item">Region: ${data.region}</div>
-                        <div class="geo-item">Country: ${data.country_name}</div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="geo-item">Country Code: ${data.country_code}</div>
-                        <div class="geo-item">Latitude: ${data.latitude}</div>
-                        <div class="geo-item">Longitude: ${data.longitude}</div>
-                        <div class="geo-item">ASN: ${data.asn}</div>
-                        <div class="geo-item">Organization: ${data.org}</div>
-                    </div>
+              <h3 class="mb-4">Your Geolocation Information:</h3>
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="info-section">
+                    <h4 class="section-title">Location Details</h4>
+                    <div class="geo-item">IP Address: ${data.ip}</div>
+                    <div class="geo-item">IP Version: ${data.version}</div>
+                    <div class="geo-item">City: ${data.city}</div>
+                    <div class="geo-item">Region: ${data.region}</div>
+                    <div class="geo-item">Region Code: ${data.region_code}</div>
+                    <div class="geo-item">Country: ${data.country_name}</div>
+                    <div class="geo-item">Country Code: ${data.country_code}</div>
+                    <div class="geo-item">Country Capital: ${data.country_capital}</div>
+                    <div class="geo-item">Continent Code: ${data.continent_code}</div>
+                  </div>
                 </div>
+                <div class="col-md-6 mb-4">
+                  <div class="info-section">
+                    <h4 class="section-title">Geographic Coordinates</h4>
+                    <div class="geo-item">Latitude: ${data.latitude}</div>
+                    <div class="geo-item">Longitude: ${data.longitude}</div>
+                    <div class="geo-item">Timezone: ${data.timezone}</div>
+                    <div class="geo-item">UTC Offset: ${data.utc_offset}</div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <div class="info-section">
+                    <h4 class="section-title">Network Information</h4>
+                    <div class="geo-item">ASN: ${data.asn}</div>
+                    <div class="geo-item">Organization: ${data.org}</div>
+                    <div class="geo-item">ISP: ${data.isp}</div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <div class="info-section">
+                    <h4 class="section-title">Additional Details</h4>
+                    <div class="geo-item">Country Population: ${data.country_population?.toLocaleString() || 'N/A'}</div>
+                    <div class="geo-item">Country Area: ${data.country_area?.toLocaleString() || 'N/A'} km²</div>
+                    <div class="geo-item">Country TLD: ${data.country_tld}</div>
+                    <div class="geo-item">Calling Code: +${data.country_calling_code}</div>
+                  </div>
+                </div>
+              </div>
             `;
 
             initMap(userLatitude, userLongitude);
@@ -231,11 +275,11 @@
       </div>
 
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-lg-8">
           <div id="geo-info"></div>
         </div>
-        <div class="col-md-4">
-          <div id="map" style="height: 400px; width: 100%"></div>
+        <div class="col-lg-4">
+          <div id="map" style="height: 500px; width: 100%"></div>
         </div>
       </div>
     </div>
