@@ -68,4 +68,4 @@ def test_get_ip_info_error(client, captured_templates):
         template, context = captured_templates[0]
         assert template.name == 'index.html'
         assert 'error' in context
-        assert 'Error retrieving IP information' in context['error']
+        assert 'Service temporarily unavailable' in context['error']
