@@ -36,9 +36,11 @@ def get_ip_info():
 
             return render_template('index.html', ip_info=ip_info)
 
-        except requests.exceptions.RequestException as e:
-            error_message = f"Error retrieving IP information: {e}"
-            return render_template('index.html', error=error_message)
+        except Exception as e:
+            # Log the error if needed
+            app.logger.error(f"Error retrieving IP information: {str(e)}")
+            # Return the template with an error message, with status 200
+            return render_template('index.html', error='Error retrieving IP information'), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
