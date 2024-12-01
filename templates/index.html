@@ -12,7 +12,7 @@
       body {
         background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
         min-height: 100vh;
-        font-family: 'Arial', sans-serif;
+        font-family: "Arial", sans-serif;
       }
       .container {
         background: rgba(255, 255, 255, 0.1);
@@ -24,7 +24,7 @@
       }
       h1 {
         color: white;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
       }
       .btn-primary {
         background: linear-gradient(45deg, #11998e, #38ef7d);
@@ -50,8 +50,14 @@
         animation: fadeIn 0.5s ease-out;
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       #map {
         border-radius: 16px;
@@ -85,18 +91,36 @@
         color: #38ef7d;
         font-size: 1.2rem;
         margin-bottom: 15px;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
       }
     </style>
     <script>
       let userLatitude, userLongitude;
 
       function fetchGeolocation() {
+        const currencySymbols = {
+          USD: "$",
+          EUR: "€",
+          GBP: "£",
+          JPY: "¥",
+          CNY: "¥",
+          INR: "₹",
+          RUB: "₽",
+          AUD: "A$",
+          CAD: "C$",
+          CHF: "Fr",
+          BRL: "R$",
+          PHP: "₱",
+        };
+
         fetch("https://ipapi.co/json/")
           .then((response) => response.json())
           .then((data) => {
             userLatitude = data.latitude;
             userLongitude = data.longitude;
+
+            const currencySymbol =
+              currencySymbols[data.currency] || data.currency;
 
             document.getElementById("geo-info").innerHTML = `
               <h3 class="mb-4">Your Geolocation Information:</h3>
@@ -110,9 +134,15 @@
                     <div class="geo-item">Region: ${data.region}</div>
                     <div class="geo-item">Region Code: ${data.region_code}</div>
                     <div class="geo-item">Country: ${data.country_name}</div>
-                    <div class="geo-item">Country Code: ${data.country_code}</div>
-                    <div class="geo-item">Country Capital: ${data.country_capital}</div>
-                    <div class="geo-item">Continent Code: ${data.continent_code}</div>
+                    <div class="geo-item">Country Code: ${
+                      data.country_code
+                    }</div>
+                    <div class="geo-item">Country Capital: ${
+                      data.country_capital
+                    }</div>
+                    <div class="geo-item">Continent Code: ${
+                      data.continent_code
+                    }</div>
                   </div>
                 </div>
                 <div class="col-md-6 mb-4">
@@ -135,10 +165,31 @@
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
                     <h4 class="section-title">Additional Details</h4>
-                    <div class="geo-item">Country Population: ${data.country_population?.toLocaleString() || 'N/A'}</div>
-                    <div class="geo-item">Country Area: ${data.country_area?.toLocaleString() || 'N/A'} km²</div>
+                    <div class="geo-item">Country Population: ${
+                      data.country_population?.toLocaleString() || "N/A"
+                    }</div>
+                    <div class="geo-item">Country Area: ${
+                      data.country_area?.toLocaleString() || "N/A"
+                    } km²</div>
                     <div class="geo-item">Country TLD: ${data.country_tld}</div>
-                    <div class="geo-item">Calling Code: +${data.country_calling_code}</div>
+                    <div class="geo-item">Calling Code: +${
+                      data.country_calling_code
+                    }</div>
+                    
+                  </div>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <div class="info-section">
+                      <h4 class="section-title">Currency Information</h4>
+                      <div class="geo-item">Currency Code: ${
+                        data.currency
+                      }</div>
+                      <div class="geo-item">Currency Name: ${
+                        data.currency_name
+                      }</div>
+                      <div class="geo-item">Currency Symbol: ${currencySymbol}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -158,93 +209,93 @@
           center: location,
           styles: [
             {
-              "elementType": "geometry",
-              "stylers": [{"color": "#242f3e"}]
+              elementType: "geometry",
+              stylers: [{ color: "#242f3e" }],
             },
             {
-              "elementType": "labels.text.stroke",
-              "stylers": [{"color": "#242f3e"}]
+              elementType: "labels.text.stroke",
+              stylers: [{ color: "#242f3e" }],
             },
             {
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#746855"}]
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#746855" }],
             },
             {
-              "featureType": "administrative.locality",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#d59563"}]
+              featureType: "administrative.locality",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#d59563" }],
             },
             {
-              "featureType": "poi",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#d59563"}]
+              featureType: "poi",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#d59563" }],
             },
             {
-              "featureType": "poi.park",
-              "elementType": "geometry",
-              "stylers": [{"color": "#263c3f"}]
+              featureType: "poi.park",
+              elementType: "geometry",
+              stylers: [{ color: "#263c3f" }],
             },
             {
-              "featureType": "poi.park",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#6b9a76"}]
+              featureType: "poi.park",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#6b9a76" }],
             },
             {
-              "featureType": "road",
-              "elementType": "geometry",
-              "stylers": [{"color": "#38414e"}]
+              featureType: "road",
+              elementType: "geometry",
+              stylers: [{ color: "#38414e" }],
             },
             {
-              "featureType": "road",
-              "elementType": "geometry.stroke",
-              "stylers": [{"color": "#212a37"}]
+              featureType: "road",
+              elementType: "geometry.stroke",
+              stylers: [{ color: "#212a37" }],
             },
             {
-              "featureType": "road",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#9ca5b3"}]
+              featureType: "road",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#9ca5b3" }],
             },
             {
-              "featureType": "road.highway",
-              "elementType": "geometry",
-              "stylers": [{"color": "#746855"}]
+              featureType: "road.highway",
+              elementType: "geometry",
+              stylers: [{ color: "#746855" }],
             },
             {
-              "featureType": "road.highway",
-              "elementType": "geometry.stroke",
-              "stylers": [{"color": "#1f2835"}]
+              featureType: "road.highway",
+              elementType: "geometry.stroke",
+              stylers: [{ color: "#1f2835" }],
             },
             {
-              "featureType": "road.highway",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#f3d19c"}]
+              featureType: "road.highway",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#f3d19c" }],
             },
             {
-              "featureType": "transit",
-              "elementType": "geometry",
-              "stylers": [{"color": "#2f3948"}]
+              featureType: "transit",
+              elementType: "geometry",
+              stylers: [{ color: "#2f3948" }],
             },
             {
-              "featureType": "transit.station",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#d59563"}]
+              featureType: "transit.station",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#d59563" }],
             },
             {
-              "featureType": "water",
-              "elementType": "geometry",
-              "stylers": [{"color": "#17263c"}]
+              featureType: "water",
+              elementType: "geometry",
+              stylers: [{ color: "#17263c" }],
             },
             {
-              "featureType": "water",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#515c6d"}]
+              featureType: "water",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#515c6d" }],
             },
             {
-              "featureType": "water",
-              "elementType": "labels.text.stroke",
-              "stylers": [{"color": "#17263c"}]
-            }
-          ]
+              featureType: "water",
+              elementType: "labels.text.stroke",
+              stylers: [{ color: "#17263c" }],
+            },
+          ],
         });
         const marker = new google.maps.Marker({
           position: location,
