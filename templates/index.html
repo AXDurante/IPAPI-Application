@@ -12,7 +12,7 @@
       body {
         background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
         min-height: 100vh;
-        font-family: 'Arial', sans-serif;
+        font-family: "Arial", sans-serif;
       }
       .container {
         background: rgba(255, 255, 255, 0.1);
@@ -24,7 +24,7 @@
       }
       h1 {
         color: white;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
       }
       .btn-primary {
         background: linear-gradient(45deg, #11998e, #38ef7d);
@@ -50,8 +50,14 @@
         animation: fadeIn 0.5s ease-out;
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       #map {
         border-radius: 16px;
@@ -85,7 +91,7 @@
         color: #38ef7d;
         font-size: 1.2rem;
         margin-bottom: 15px;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
       }
       .language-btn {
         background: rgba(255, 255, 255, 0.2);
@@ -96,7 +102,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
       }
-      
+
       .language-btn:hover {
         background: rgba(255, 255, 255, 0.3);
         transform: translateY(-2px);
@@ -137,12 +143,13 @@
           countryPopulation: "Country Population",
           countryArea: "Country Area",
           countryTld: "Country TLD",
-          callingCode: "Calling Code"
+          callingCode: "Calling Code",
         },
         fil: {
           title: "Impormasyon ng Pampublikong IP",
           button: "Kunin ang Impormasyon ng IP",
-          initialMessage: "Pindutin ang button para makita ang impormasyon ng iyong lokasyon ng IP.",
+          initialMessage:
+            "Pindutin ang button para makita ang impormasyon ng iyong lokasyon ng IP.",
           switchLang: "Switch to English",
           geoInfo: "Ang Iyong Impormasyon sa Geolocation:",
           locationDetails: "Mga Detalye ng Lokasyon",
@@ -169,87 +176,175 @@
           countryPopulation: "Populasyon ng Bansa",
           countryArea: "Sukat ng Bansa",
           countryTld: "TLD ng Bansa",
-          callingCode: "Code ng Pagtawag"
-        }
+          callingCode: "Code ng Pagtawag",
+        },
       };
 
-      let currentLang = 'en';
+      let currentLang = "en";
 
       function toggleLanguage() {
-        currentLang = currentLang === 'en' ? 'fil' : 'en';
+        currentLang = currentLang === "en" ? "fil" : "en";
         updatePageLanguage();
       }
 
       function updatePageLanguage() {
         // Update button text
-        document.getElementById('langToggle').textContent = translations[currentLang].switchLang;
-        
+        document.getElementById("langToggle").textContent =
+          translations[currentLang].switchLang;
+
         // Update title
-        document.querySelector('h1').textContent = translations[currentLang].title;
-        
+        document.querySelector("h1").textContent =
+          translations[currentLang].title;
+
         // Update main button
-        document.querySelector('.btn-primary').textContent = translations[currentLang].button;
+        document.querySelector(".btn-primary").textContent =
+          translations[currentLang].button;
 
         // Update initial message if it's showing
-        const geoInfo = document.getElementById('geo-info');
-        if (geoInfo.querySelector('h3')?.textContent.includes('Press the button')) {
+        const geoInfo = document.getElementById("geo-info");
+        if (
+          geoInfo.querySelector("h3")?.textContent.includes("Press the button")
+        ) {
           geoInfo.innerHTML = `<h3>${translations[currentLang].initialMessage}</h3>`;
         }
 
         // If data is already displayed, update it
-        if (geoInfo.querySelector('.row')) {
+        if (geoInfo.querySelector(".row")) {
           fetchGeolocation(); // Refetch and display in new language
         }
       }
 
       function fetchGeolocation() {
+        const currencySymbols = {
+          USD: "$",
+          EUR: "€",
+          GBP: "£",
+          JPY: "¥",
+          CNY: "¥",
+          INR: "₹",
+          RUB: "₽",
+          AUD: "A$",
+          CAD: "C$",
+          CHF: "Fr",
+          BRL: "R$",
+          PHP: "₱",
+        };
+
         fetch("https://ipapi.co/json/")
           .then((response) => response.json())
           .then((data) => {
             userLatitude = data.latitude;
             userLongitude = data.longitude;
 
+            const currencySymbol =
+              currencySymbols[data.currency] || data.currency;
+
             document.getElementById("geo-info").innerHTML = `
               <h3 class="mb-4">${translations[currentLang].geoInfo}</h3>
               <div class="row">
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
-                    <h4 class="section-title">${translations[currentLang].locationDetails}</h4>
-                    <div class="geo-item">${translations[currentLang].ipAddress}: ${data.ip}</div>
-                    <div class="geo-item">${translations[currentLang].ipVersion}: ${data.version}</div>
-                    <div class="geo-item">${translations[currentLang].city}: ${data.city}</div>
-                    <div class="geo-item">${translations[currentLang].region}: ${data.region}</div>
-                    <div class="geo-item">${translations[currentLang].regionCode}: ${data.region_code}</div>
-                    <div class="geo-item">${translations[currentLang].country}: ${data.country_name}</div>
-                    <div class="geo-item">${translations[currentLang].countryCode}: ${data.country_code}</div>
-                    <div class="geo-item">${translations[currentLang].countryCapital}: ${data.country_capital}</div>
-                    <div class="geo-item">${translations[currentLang].continentCode}: ${data.continent_code}</div>
+                    <h4 class="section-title">${
+                      translations[currentLang].locationDetails
+                    }</h4>
+                    <div class="geo-item">${
+                      translations[currentLang].ipAddress
+                    }: ${data.ip}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].ipVersion
+                    }: ${data.version}</div>
+                    <div class="geo-item">${translations[currentLang].city}: ${
+              data.city
+            }</div>
+                    <div class="geo-item">${
+                      translations[currentLang].region
+                    }: ${data.region}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].regionCode
+                    }: ${data.region_code}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].country
+                    }: ${data.country_name}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].countryCode
+                    }: ${data.country_code}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].countryCapital
+                    }: ${data.country_capital}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].continentCode
+                    }: ${data.continent_code}</div>
                   </div>
                 </div>
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
-                    <h4 class="section-title">${translations[currentLang].geographicCoordinates}</h4>
-                    <div class="geo-item">${translations[currentLang].latitude}: ${data.latitude}</div>
-                    <div class="geo-item">${translations[currentLang].longitude}: ${data.longitude}</div>
-                    <div class="geo-item">${translations[currentLang].timezone}: ${data.timezone}</div>
-                    <div class="geo-item">${translations[currentLang].utcOffset}: ${data.utc_offset}</div>
+                    <h4 class="section-title">${
+                      translations[currentLang].geographicCoordinates
+                    }</h4>
+                    <div class="geo-item">${
+                      translations[currentLang].latitude
+                    }: ${data.latitude}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].longitude
+                    }: ${data.longitude}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].timezone
+                    }: ${data.timezone}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].utcOffset
+                    }: ${data.utc_offset}</div>
                   </div>
                 </div>
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
-                    <h4 class="section-title">${translations[currentLang].networkInformation}</h4>
-                    <div class="geo-item">${translations[currentLang].asn}: ${data.asn}</div>
-                    <div class="geo-item">${translations[currentLang].organization}: ${data.org}</div>
-                    <div class="geo-item">${translations[currentLang].isp}: ${data.isp}</div>
+                    <h4 class="section-title">${
+                      translations[currentLang].networkInformation
+                    }</h4>
+                    <div class="geo-item">${translations[currentLang].asn}: ${
+              data.asn
+            }</div>
+                    <div class="geo-item">${
+                      translations[currentLang].organization
+                    }: ${data.org}</div>
+                    <div class="geo-item">${translations[currentLang].isp}: ${
+              data.isp
+            }</div>
                   </div>
                 </div>
                 <div class="col-md-6 mb-4">
                   <div class="info-section">
-                    <h4 class="section-title">${translations[currentLang].additionalDetails}</h4>
-                    <div class="geo-item">${translations[currentLang].countryPopulation}: ${data.country_population?.toLocaleString() || 'N/A'}</div>
-                    <div class="geo-item">${translations[currentLang].countryArea}: ${data.country_area?.toLocaleString() || 'N/A'} km²</div>
-                    <div class="geo-item">${translations[currentLang].countryTld}: ${data.country_tld}</div>
-                    <div class="geo-item">${translations[currentLang].callingCode}: +${data.country_calling_code}</div>
+                    <h4 class="section-title">${
+                      translations[currentLang].additionalDetails
+                    }</h4>
+                    <div class="geo-item">${
+                      translations[currentLang].countryPopulation
+                    }: ${
+              data.country_population?.toLocaleString() || "N/A"
+            }</div>
+                    <div class="geo-item">${
+                      translations[currentLang].countryArea
+                    }: ${data.country_area?.toLocaleString() || "N/A"} km²</div>
+                    <div class="geo-item">${
+                      translations[currentLang].countryTld
+                    }: ${data.country_tld}</div>
+                    <div class="geo-item">${
+                      translations[currentLang].callingCode
+                    }: +${data.country_calling_code}</div>
+                    
+                  </div>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <div class="info-section">
+                      <h4 class="section-title">Currency Information</h4>
+                      <div class="geo-item">Currency Code: ${
+                        data.currency
+                      }</div>
+                      <div class="geo-item">Currency Name: ${
+                        data.currency_name
+                      }</div>
+                      <div class="geo-item">Currency Symbol: ${currencySymbol}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -269,93 +364,93 @@
           center: location,
           styles: [
             {
-              "elementType": "geometry",
-              "stylers": [{"color": "#242f3e"}]
+              elementType: "geometry",
+              stylers: [{ color: "#242f3e" }],
             },
             {
-              "elementType": "labels.text.stroke",
-              "stylers": [{"color": "#242f3e"}]
+              elementType: "labels.text.stroke",
+              stylers: [{ color: "#242f3e" }],
             },
             {
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#746855"}]
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#746855" }],
             },
             {
-              "featureType": "administrative.locality",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#d59563"}]
+              featureType: "administrative.locality",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#d59563" }],
             },
             {
-              "featureType": "poi",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#d59563"}]
+              featureType: "poi",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#d59563" }],
             },
             {
-              "featureType": "poi.park",
-              "elementType": "geometry",
-              "stylers": [{"color": "#263c3f"}]
+              featureType: "poi.park",
+              elementType: "geometry",
+              stylers: [{ color: "#263c3f" }],
             },
             {
-              "featureType": "poi.park",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#6b9a76"}]
+              featureType: "poi.park",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#6b9a76" }],
             },
             {
-              "featureType": "road",
-              "elementType": "geometry",
-              "stylers": [{"color": "#38414e"}]
+              featureType: "road",
+              elementType: "geometry",
+              stylers: [{ color: "#38414e" }],
             },
             {
-              "featureType": "road",
-              "elementType": "geometry.stroke",
-              "stylers": [{"color": "#212a37"}]
+              featureType: "road",
+              elementType: "geometry.stroke",
+              stylers: [{ color: "#212a37" }],
             },
             {
-              "featureType": "road",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#9ca5b3"}]
+              featureType: "road",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#9ca5b3" }],
             },
             {
-              "featureType": "road.highway",
-              "elementType": "geometry",
-              "stylers": [{"color": "#746855"}]
+              featureType: "road.highway",
+              elementType: "geometry",
+              stylers: [{ color: "#746855" }],
             },
             {
-              "featureType": "road.highway",
-              "elementType": "geometry.stroke",
-              "stylers": [{"color": "#1f2835"}]
+              featureType: "road.highway",
+              elementType: "geometry.stroke",
+              stylers: [{ color: "#1f2835" }],
             },
             {
-              "featureType": "road.highway",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#f3d19c"}]
+              featureType: "road.highway",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#f3d19c" }],
             },
             {
-              "featureType": "transit",
-              "elementType": "geometry",
-              "stylers": [{"color": "#2f3948"}]
+              featureType: "transit",
+              elementType: "geometry",
+              stylers: [{ color: "#2f3948" }],
             },
             {
-              "featureType": "transit.station",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#d59563"}]
+              featureType: "transit.station",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#d59563" }],
             },
             {
-              "featureType": "water",
-              "elementType": "geometry",
-              "stylers": [{"color": "#17263c"}]
+              featureType: "water",
+              elementType: "geometry",
+              stylers: [{ color: "#17263c" }],
             },
             {
-              "featureType": "water",
-              "elementType": "labels.text.fill",
-              "stylers": [{"color": "#515c6d"}]
+              featureType: "water",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#515c6d" }],
             },
             {
-              "featureType": "water",
-              "elementType": "labels.text.stroke",
-              "stylers": [{"color": "#17263c"}]
-            }
-          ]
+              featureType: "water",
+              elementType: "labels.text.stroke",
+              stylers: [{ color: "#17263c" }],
+            },
+          ],
         });
         const marker = new google.maps.Marker({
           position: location,
@@ -383,7 +478,11 @@
         <button onclick="fetchGeolocation()" class="btn btn-primary my-4 me-2">
           Get IP Information
         </button>
-        <button class="btn btn-primary my-4" onclick="toggleLanguage()" id="langToggle">
+        <button
+          class="btn btn-primary my-4"
+          onclick="toggleLanguage()"
+          id="langToggle"
+        >
           Switch to Filipino
         </button>
       </div>
