@@ -144,6 +144,10 @@
           countryArea: "Country Area",
           countryTld: "Country TLD",
           callingCode: "Calling Code",
+          currencyInformation: "Currency Information",
+          currencyCode: "Currency Code",
+          currencyName: "Currency Name",
+          currencySymbol: "Currency Symbol",
         },
         fil: {
           title: "Impormasyon ng Pampublikong IP",
@@ -177,6 +181,10 @@
           countryArea: "Sukat ng Bansa",
           countryTld: "TLD ng Bansa",
           callingCode: "Code ng Pagtawag",
+          currencyInformation: "Impormasyon ng Salapi",
+          currencyCode: "Code ng Salapi",
+          currencyName: "Pangalan ng Salapi",
+          currencySymbol: "Simbolo ng Salapi",
         },
       };
 
@@ -336,14 +344,14 @@
                 <div class="row mt-4">
                   <div class="col-12">
                     <div class="info-section">
-                      <h4 class="section-title">Currency Information</h4>
-                      <div class="geo-item">Currency Code: ${
+                      <h4 class="section-title">${translations[currentLang].currencyInformation}</h4>
+                      <div class="geo-item">${translations[currentLang].currencyCode}: ${
                         data.currency
                       }</div>
-                      <div class="geo-item">Currency Name: ${
+                      <div class="geo-item">${translations[currentLang].currencyName}: ${
                         data.currency_name
                       }</div>
-                      <div class="geo-item">Currency Symbol: ${currencySymbol}</div>
+                      <div class="geo-item">${translations[currentLang].currencySymbol}: ${currencySymbol}</div>
                     </div>
                   </div>
                 </div>
